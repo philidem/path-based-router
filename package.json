@@ -1,5 +1,5 @@
 {
-    "name": "router",
+    "name": "amd-router",
     "version": "1.0.0",
     "description": "JavaScript AMD library for finding best matching route given a path",
     "homepage": "https://github.com/philidem/router-js",
@@ -16,8 +16,8 @@
     },
     "raptor": {
         "dependencies": [
-            "router.js",
-            "lib/Router.js"
+            "amd-router.js",
+            "Router.js"
         ]
     }
 }

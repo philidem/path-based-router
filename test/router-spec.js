@@ -8,10 +8,7 @@ require = raptor.require;
 var moduleManifest = resources.createFileResource(files.joinPaths(__dirname, '../package.json'));
 packaging.load(packaging.getPackageManifest(moduleManifest));
 
-var router = require('router');
-
-var Router = require('router/Router');
-
+var router = require('amd-router');
 
 describe('router/Router', function() {
     
@@ -46,6 +43,11 @@ describe('router/Router', function() {
             var match = myRouter.findRoute('/cars/123');
             expect(match.params.carId).toEqual('123');
             expect(match.route.toString(match.params)).toEqual('/cars/123');
+        });
+
+        it('should not find match /cars/123/bad', function() {
+            var match = myRouter.findRoute('/cars/123/bad');
+            expect(match).toEqual(null);
         });
         
         it('should support resetting of routing table', function() {
