@@ -1,0 +1,23 @@
+{
+    "name": "router",
+    "version": "1.0.0",
+    "description": "JavaScript AMD library for finding best matching route given a path",
+    "homepage": "https://github.com/philidem/router-js",
+    "authors": [
+        {
+            "name": "Phil Gates-Idem",
+            "email": "phillip.gates-idem@gmail.com"
+        }
+    ],
+    "main": "./router",
+    "devDependencies": {
+        "raptor": "2.x",
+        "jasmine-node": "1.3.x"
+    },
+    "raptor": {
+        "dependencies": [
+            "router.js",
+            "lib/Router.js"
+        ]
+    }
+}
