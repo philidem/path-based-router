@@ -9,14 +9,13 @@
             "email": "phillip.gates-idem@gmail.com"
         }
     ],
-    "main": "./router",
+    "main": "./amd-router.js",
     "devDependencies": {
         "raptor": "2.x",
         "jasmine-node": "1.3.x"
     },
     "raptor": {
         "dependencies": [
-            "amd-router.js",
             "Router.js"
         ]
     }
