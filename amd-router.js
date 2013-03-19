@@ -1,12 +1,10 @@
 /**
- * This class keeps track of routes and finding the route that matches
- * a given path. It does not facilitate actually executing the route.
- *
- * Inspired by: https://github.com/aaronblohowiak/routes.js
+ * Module definition for amd-router that works in AMD and Node.js environment.
  */
 (function() {
 
-    function RouterFactory(require) {
+    function ModuleFactory(require, baseModule) {
+
         function Placeholder(key) {
             this.key = key;
         }
@@ -215,26 +213,28 @@
             }
         }
 
-        return Router;
+        return {
+            Router : Router
+        }
     }
 
-    var Router = undefined;
+    var thisModule = undefined;
 
     if (typeof module !== 'undefined') {
         // we're in Node environment so go ahead and build Router and export it
-        module.exports = Router = RouterFactory(require);
+        module.exports = thisModule = ModuleFactory(require, '.');
     }
 
     if (typeof define !== 'undefined') {
         // we're in an AMD environment so define the module
-        if (Router) {
+        if (thisModule) {
             // Use the Router that we already instantiated in Node environment
-            define('amd-router/Router', function(require) {
-                return Router;
+            define('amd-router', function(require) {
+                return thisModule;
             });
         } else {
-            // Define module using RouterFactory which will build Router on demand
-            define('amd-router/Router', RouterFactory);
+            // Define module using ModuleFactory which will build Router on demand
+            define('amd-router', ModuleFactory);
         }
     }
 })();
