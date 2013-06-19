@@ -1,6 +1,6 @@
 {
     "name": "amd-router",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "JavaScript AMD library for finding best matching route given a path",
     "homepage": "https://github.com/philidem/router-js",
     "authors": [

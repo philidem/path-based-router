@@ -105,7 +105,7 @@
                         var placeholder = new Placeholder(key);
                         placeholders.push(placeholder);
                         tokens.push(placeholder);
-                        regexPattern.push('([^/]+)');
+                        regexPattern.push('([^/]*)');
                     } else {
                         // normal path part
                         tokens.push(part);
