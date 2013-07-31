@@ -30,7 +30,7 @@
 
             /**
              * @return object containing parameters (or empty object if no placeholders) or
-             *  false if  the path does not match this route
+             *  false if the path does not match this route
              */
             matches : function(path) {
                 var placeholders = this._placeholders;
@@ -106,6 +106,13 @@
                         placeholders.push(placeholder);
                         tokens.push(placeholder);
                         regexPattern.push('([^/]*)');
+                    } else if (part === '**') {
+                        // wildcard
+                        var key = placeholders.length;
+                        var placeholder = new Placeholder(key);
+                        placeholders.push(placeholder);
+                        tokens.push(placeholder);
+                        regexPattern.push('(.*)');
                     } else {
                         // normal path part
                         tokens.push(part);
@@ -225,7 +232,7 @@
         module.exports = thisModule = ModuleFactory(require, '.');
     }
 
-    if (typeof define !== 'undefined') {
+    if (typeof define === 'function') {
         // we're in an AMD environment so define the module
         if (thisModule) {
             // Use the Router that we already instantiated in Node environment
