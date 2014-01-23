@@ -127,7 +127,7 @@
 
             if (placeholders.length > 0) {
                 // combine the regex parts to form the final regex pattern
-                var pattern = '^' + regexPattern.join('\\/') + '$';
+                var pattern = '^' + regexPattern.join('\\/') + '/?$';
                 return new Route({
                     route : route,
                     tokens : tokens,
@@ -136,8 +136,10 @@
                 });
             } else {
                 // path contains no placeholders so we will only need to check for exact match
+                var pattern = '^' + regexPattern.join('\\/') + '/?$';
                 return new Route({
-                    route : route
+                    route : route,
+                    regex : new RegExp(pattern)
                 })
             }
 
