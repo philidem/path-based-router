@@ -161,16 +161,25 @@
              * The "route" property is the Route entry that matched.
              * The "params" property is an object that contains the
              * placeholder string values.
+             *
+             * @param {String} path the path to match
+             * @param {Number} i the index to start searching from
              */
-            findRoute : function(path) {
-                for (var i = 0; i < this.routes.length; i++) {
+            findRoute : function(path, i) {
+                if (i === undefined) {
+                    i = 0;
+                }
+
+                var len = this.routes.length;
+                for (; i < len; i++) {
                     var route = this.routes[i];
                     var params = route.matches(path);
                     if (params) {
                         // found a matching route so return the match
                         return {
                             route : route,
-                            params : params
+                            params : params,
+                            routeIndex : i
                         };
                     }
                 }
