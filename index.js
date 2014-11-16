@@ -28,7 +28,7 @@ Placeholder.prototype.toString = function(params) {
 
 function Route(config) {
     if (config) {
-        this._route = config.route;
+        this.path = config.path;
         this._tokens = config.tokens;
         this._regex = config.regex;
         this._placeholders = config.placeholders;
@@ -59,14 +59,14 @@ Route.prototype = {
 
             return params;
         } else {
-            return (this._route === path) ? {} : false;
+            return (this.path === path) ? {} : false;
         }
     },
 
     toString: function(params) {
 
         if (params === undefined) {
-            return this._route;
+            return this.path;
         } else if (this._tokens) {
             var tokens = this._tokens;
             var parts = new Array(tokens.length);
@@ -75,12 +75,12 @@ Route.prototype = {
             }
             return parts.join('/');
         } else {
-            return this._route;
+            return this.path;
         }
     },
 
     isRoutable: function() {
-        return !!this._route;
+        return !!this.path;
     }
 };
 
@@ -91,7 +91,7 @@ Route.prototype = {
  */
 var escapeRegex = /([\/.\\])/g;
 
-function parseRoute(route) {
+function _parseRoute(path) {
 
     // the tokens that can be used to serialize a route
     var tokens = [];
@@ -101,7 +101,7 @@ function parseRoute(route) {
     var regexPattern = [];
 
     // first, split the route into parts using the '/' as a delimiter
-    var parts = route.split('/');
+    var parts = path.split('/');
     for (var i = 0; i < parts.length; i++) {
 
         var part = parts[i];
@@ -144,7 +144,7 @@ function parseRoute(route) {
         // combine the regex parts to form the final regex pattern
         var pattern = '^' + regexPattern.join('\\/') + '$';
         return new Route({
-            route: route,
+            path: path,
             tokens: tokens,
             placeholders: (placeholders.length > 0) ? placeholders : undefined,
             regex: new RegExp(pattern)
@@ -152,10 +152,33 @@ function parseRoute(route) {
     } else {
         // path contains no placeholders so we will only need to check for exact match
         return new Route({
-            route: route
+            path: path
         });
     }
 
+}
+
+function _createRoute(routeConfig) {
+    var route;
+
+    if (routeConfig.constructor === String) {
+        // routeConfig is a simple route pattern
+        route = _parseRoute(routeConfig);
+    } else {
+
+        if (routeConfig.path === undefined) {
+            route = new Route();
+        } else {
+            // routeConfig is a route configuration
+            // that contains a "route" property.
+            route = _parseRoute(routeConfig.path);
+        }
+
+        // transfer config properties to route
+        extend(route, routeConfig);
+    }
+
+    return route;
 }
 
 function Router(options) {
@@ -203,24 +226,7 @@ extend(Router.prototype, {
 
     addRoute: function(routeConfig) {
 
-        var route;
-
-        if (routeConfig.constructor === String) {
-            // routeConfig is a simple route pattern
-            route = parseRoute(routeConfig);
-        } else {
-
-            if (routeConfig.route === undefined) {
-                route = new Route();
-            } else {
-                // routeConfig is a route configuration
-                // that contains a "route" property.
-                route = parseRoute(routeConfig.route);
-            }
-
-            // transfer config properties to route
-            extend(route, routeConfig);
-        }
+        var route = _createRoute(routeConfig);
 
         if (route.isRoutable()) {
             // add route to our array
@@ -245,7 +251,13 @@ module.exports = {
         return new Router(options);
     },
 
-    Router: Router
+    createRoute: function(routeConfig) {
+        return new Route(routeConfig);
+    },
+
+    Router: Router,
+
+    Route: Route
 };
 
 module.exports.createRouter = module.exports.create;
