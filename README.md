@@ -1,7 +1,6 @@
 path-based-router
 =========
 ## Installation
-**Install path-based-router module:**
 ```bash
 npm install path-based-router --save
 ```
