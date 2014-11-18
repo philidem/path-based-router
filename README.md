@@ -1,5 +1,13 @@
 path-based-router
 =========
+A simple router that supports the following types of paths:
+```
+/orders/:orderId/history
+/orders/
+/orders
+/search/**
+```
+
 ## Installation
 ```bash
 npm install path-based-router --save
@@ -71,6 +79,10 @@ if (match) {
     // empty string)
     assert(route.toString(params) === '/boats/123');
 }
+
+var searchMatch = router.findRoute('/search/abc/123');
+// wildcard (**) search parameter values are keyed by their index
+assert(searchMatch.params[0] === 'abc/123');
 ```
 
 **Alternative constructor:**
