@@ -10,6 +10,8 @@ A simple router that supports the following types of paths:
 
 ## Installation
 ```bash
+# Install latest version of path-based-router
+# and save changes to package.json
 npm install path-based-router --save
 ```
 
