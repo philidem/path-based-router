@@ -252,7 +252,7 @@ module.exports = {
     },
 
     createRoute: function(routeConfig) {
-        return new Route(routeConfig);
+        return _createRoute(routeConfig);
     },
 
     Router: Router,
