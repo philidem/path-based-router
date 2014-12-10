@@ -35,53 +35,67 @@ function Route(config) {
     }
 }
 
-Route.prototype = {
+var Route_prototype = Route.prototype;
 
-    /**
-     * @return object containing parameters (or empty object if no placeholders) or
-     *  false if the path does not match this route
-     */
-    matches: function(path) {
-        var placeholders = this._placeholders;
+/**
+ * @return object containing parameters (or empty object if no placeholders) or
+ *  false if the path does not match this route
+ */
+ Route_prototype.matches = function(path) {
+    var placeholders = this._placeholders;
 
-        if (this._regex) {
-            var captures = this._regex.exec(path);
-            if (!captures) {
-                return false;
-            }
-
-            var params = {};
-
-            for (var i = 1; i < captures.length; i++) {
-                var capture = captures[i];
-                params[placeholders[i-1].key] = capture;
-            }
-
-            return params;
-        } else {
-            return (this.path === path) ? {} : false;
+    if (this._regex) {
+        var captures = this._regex.exec(path);
+        if (!captures) {
+            return false;
         }
-    },
 
-    toString: function(params) {
+        var params = {};
 
-        if (params === undefined) {
-            return this.path;
-        } else if (this._tokens) {
-            var tokens = this._tokens;
-            var parts = new Array(tokens.length);
-            for (var i = 0; i < tokens.length; i++) {
-                parts[i] = tokens[i].toString(params);
-            }
-            return parts.join('/');
-        } else {
-            return this.path;
+        for (var i = 1; i < captures.length; i++) {
+            var capture = captures[i];
+            params[placeholders[i-1].key] = capture;
         }
-    },
 
-    isRoutable: function() {
-        return !!this.path;
+        return params;
+    } else {
+        return (this.path === path) ? {} : false;
     }
+};
+
+Route_prototype.toString = function(params) {
+
+    if (params === undefined) {
+        return this.path;
+    } else if (this._tokens) {
+        var tokens = this._tokens;
+        var parts = new Array(tokens.length);
+        for (var i = 0; i < tokens.length; i++) {
+            parts[i] = tokens[i].toString(params);
+        }
+        return parts.join('/');
+    } else {
+        return this.path;
+    }
+};
+
+Route_prototype.isRoutable = function() {
+    return !!this.path;
+};
+
+Route_prototype.getPlaceholders = function() {
+    var placeholders = this._placeholders;
+    if (!placeholders) {
+        return [];
+    }
+    
+    var result = new Array(placeholders.length);
+    var i = placeholders.length;
+    while(--i >= 0) {
+        result[i] = placeholders[i].key;
+    }
+    
+    return result;
 };
 
 /*
@@ -164,13 +178,14 @@ function _createRoute(routeConfig) {
     if (routeConfig.constructor === String) {
         // routeConfig is a simple route pattern
         route = _parseRoute(routeConfig);
+    } else if (routeConfig.constructor === Route) {
+        route = routeConfig;
     } else {
-
         if (routeConfig.path === undefined) {
             route = new Route();
         } else {
             // routeConfig is a route configuration
-            // that contains a "route" property.
+            // that contains a "path" property.
             route = _parseRoute(routeConfig.path);
         }
 
@@ -253,6 +268,10 @@ module.exports = {
 
     createRoute: function(routeConfig) {
         return _createRoute(routeConfig);
+    },
+    
+    isRoute: function(route) {
+        return (route != null) && (route.constructor === Route);
     },
 
     Router: Router,

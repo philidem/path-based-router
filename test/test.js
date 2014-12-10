@@ -66,8 +66,21 @@ describe('raptor-async parallel' , function() {
         expect(match.route.extra).to.equal('something');
     });
 
+    it('should provide access to placeholders', function() {
+        var router = new Router({
+            routes: [
+                '/something/:a/:b/:c'
+            ]
+        });
+        
+        var route = router.getRoutes()[0];
+        expect(route.getPlaceholders()).to.deep.equal(['a', 'b', 'c']);
+    });
+    
     it('should support resetting of routing table', function() {
         router.reset();
         expect(router.getRoutes().length).to.equal(0);
     });
+    
+    
 });
