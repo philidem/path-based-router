@@ -20,7 +20,8 @@ function Placeholder(key) {
 
 Placeholder.prototype.toString = function(params) {
     if (params) {
-        return params[this.key] || '';
+        var value = params[this.key];
+        return (value == null) ? '' : value.toString();
     } else {
         return ':' + this.key;
     }
@@ -88,13 +89,13 @@ Route_prototype.getPlaceholders = function() {
     if (!placeholders) {
         return [];
     }
-    
+
     var result = new Array(placeholders.length);
     var i = placeholders.length;
     while(--i >= 0) {
         result[i] = placeholders[i].key;
     }
-    
+
     return result;
 };
 
@@ -269,7 +270,7 @@ module.exports = {
     createRoute: function(routeConfig) {
         return _createRoute(routeConfig);
     },
-    
+
     isRoute: function(route) {
         return (route != null) && (route.constructor === Route);
     },
