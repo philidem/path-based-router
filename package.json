@@ -7,6 +7,10 @@
     "scripts": {
         "test": "node_modules/.bin/mocha --ui bdd --reporter spec ./test"
     },
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/philidem/path-based-router.git",
+    },
     "main": "./index.js",
     "devDependencies": {
         "mocha": "~1.15.1",
